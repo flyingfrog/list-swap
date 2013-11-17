@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+  <title>List Swap Tool</title>
+  <link type="text/css" rel="stylesheet" href="list-swap.css" />
+  <script type="text/javascript" src="list-swap.js"></script>
+
+<!-- Learn how to pull in the crypto-js project via git and bring in the processing files that way -->
+<!--  <script type="text/javascript" src="md5-min.js"></script>
+      <script type="text/javascript" src="sha1-min.js"></script>
+  <script type="text/javascript" src="sha256-min.js"></script> -->
+
+<!-- Same for FileSaver -->
+<!--  <script type="text/javascript" src="FileSaver.js"></script> -->
+
+</head>
+
+<body>
+<div id="main_menu">
+  <div id="start_hash" onClick='selectOption("start_hash");'>Create hashes of my e-mail list</div>
+  <div id="start_combine" onClick='selectOption("start_combine");'>Combine and dedup my list with another organization's</div>
+</div>
+
+<div id="main_hash">
+  <div id="main_hash_choose_file"><span>Select file to hash:
+      <input type="file" name="hash_input_file" id="hash_input_file"/></span><button id="hash_load_file" name="hash_load_file" onclick='hash_load_file();'>Preprocess this file</button></div>
+  
+  <div id="main_hash_options"><span>Options:<br/>
+    <input type="radio" id="email_case" name="email_case" value="upper"/>Make all addresses UPPER-CASE<br/>
+    <input type="radio" id="email_case" name="email_case" value="lower"/>Make all addresses lower-case<br/>
+    <input type="radio" id="email_case" name="email_case" value="keep"/>Keep address case as-is<br/>
+    <input type="checkbox"  id="first_row_names" name="first_row_names" checked="true">Are column names in Row 1?<br/>
+    Column containing e-mail:
+    <select id="email_field" name="email_field"></select><br/>
+    Choose fields to add to output file:
+    <select id="output_fields" name="output_fields" multiple></select><br/>
+    Text to add before each entry: <input type="text" id="prepend_text" name="prepend_text"/><br/>
+    Add after each entry: <input type="text" id="postpend_text" name="postpend_text"/><br/>
+    Hash method:<br/>
+    <input type="radio" id="hash_method" name="hash_method" value="MD5" selected/>MD5<br/>
+    <input type="radio" id="hash_method" name="hash_method" value="SHA1"/>SHA1<br/>
+    <input type="radio" id="hash_method" name="hash_method" value="SHA256"/>SHA256<br/>
+    <button id="start_hash" name="start_hash">Hash my file!</button>
+  </span></div>
+ 
+  <div id="main_hash_output"><span>
+      <button id="save_output">Save your output file</button>
+  </span></div>
+</div>
+
+<div id="main_combine">
+Combine lists!
+
+</body>
+</html>

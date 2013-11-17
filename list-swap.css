@@ -1,0 +1,58 @@
+body{
+    padding: 0px;
+    margin: 0px;
+}
+div{
+    border-style: solid;
+}
+
+#main_menu{
+    width:100%;
+}
+#start_hash{
+    display:inline-block;
+    width:49%;
+    align:center;
+    padding: 0px;
+    margin: 0px;
+}
+
+#start_combine{
+    display:inline-block;
+    width:49%;
+    align:center;
+    padding:0px;
+    margin: 0px;
+}
+
+#main_hash{
+    display:none;
+}
+
+#main_hash_choose_file{
+//    background-color: red;
+}
+
+#main_hash_choose_file span{
+//    visibility:hidden;
+}
+
+#main_hash_options{
+//    background-color: green;
+}
+
+#main_hash_options span{
+//    visibility: hidden;
+}
+
+#main_hash_output{
+//    background-color: blue;
+}
+
+#main_hash_output span{
+//    visibility: hidden;
+}
+
+#main_combine{
+    display:none;
+}
