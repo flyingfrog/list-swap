@@ -42,14 +42,33 @@
     <input type="radio" id="hash_method" name="hash_method" value="SHA256"/>SHA256<br/>
     <button id="start_hash" name="start_hash">Hash my file!</button>
   </span></div>
- 
-  <div id="main_hash_output"><span>
-      <button id="save_output">Save your output file</button>
-  </span></div>
+
+  <div id="main_hash_output">
+    <!-- Preview the first x records! -->
+    <div id="preview_output">Preview: first <input type="text" id="preview_num" name="preview_num"/> rows? <button id="hash_preview" name="hash_preview">Yes!</button>
+    </div>
+    <button id="save_output">Save your output file</button>
+  </div>
 </div>
 
 <div id="main_combine">
 Combine lists!
+<div id="main_combine_files">
+Upload your org's file:<br/>
+Upload your partner org's file:<br/>
+</div>
+<div id="main_combine_settings">
+Choose:
+<ul><li>The shared list - contacts who are on both lists. You might use this as an exclusion file for a list swap.</li>
+<li>Unique recorts - contacts who are on only one list. You might use this as a mailing file for a list swap.</li></ul>
+<button id="main_combine_process" name="main_combine_process">Go!</button>
+</div>
+
+<div id="main_combine_output">
+Get your output files: your file | your partner org's file
+</div>
+
+</div>
 
 </body>
 </html>

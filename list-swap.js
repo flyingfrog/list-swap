@@ -3,7 +3,6 @@ Part of the List-Swap project.
 Copyright (c) 2013 by Nathan Gerratt, ngerratt@gmail.com
 */
 
-
 function selectOption(option)
 {
     switch(option)
@@ -25,14 +24,13 @@ function selectOption(option)
 function hash_load_file()
 {
     var filename = document.getElementById("hash_input_file").files[0];
-    if(filename == null || filename == undefined) {
+    if(filename == null || filename == undefined || filename.name == null) {
 	return;
     } 
     else
     {
-	var a;
-	processCSV(filename, function() { alert ("success")},
-		   function(evt) { alert ("failure" + evt)});
+	processCSV(filename, function(results) { hash_populate_form(results);},
+		   function(evt) { alert ("Couldn't load file: " + evt)});
 	
     }
 }
@@ -41,7 +39,7 @@ function processCSV(fileName, success, failure)
 {
     //Takes input filename, calls success with argument of an array[][] decoded from FileName or calls failure with error message.
     
-    if(fileName == null || fileName == "" ||
+    if(fileName == null || fileName.name == "" ||
        success == null)
     {
 	if(failure != null) {
@@ -51,10 +49,10 @@ function processCSV(fileName, success, failure)
     }
 
     var reader = new FileReader();
-    reader.onerror = new function(evt) {
+    reader.onerror = function(evt) {
 	failure(evt);
     }
-    reader.onload = new function() {
+    reader.onload = function() {
 	decodeCSV(reader.result, success, failure);
     }
     reader.readAsText(fileName);
@@ -89,6 +87,7 @@ function decodeCSV(fileBlob, success, failure)
     {
 	if(lines[currLine].indexOf('"') == -1) { //no quotes, so no escaping necessary.
 	    contents.push(lines[currLine].split(','));
+	    continue;
 	}
 	
 	var currString = lines[currLine];
@@ -99,35 +98,41 @@ function decodeCSV(fileBlob, success, failure)
 	    var firstQuote = currString.indexOf('"');
 
 	    if(firstComma >=0 && (firstQuote == -1 || firstComma < firstQuote)) { //The first entry in currString doesn't have quotes.
-		arrayBuild.push(currString.substr(0,firstComma-1));
-		currString= currString.substr(firstComma+1);				
+		arrayBuild.push(currString.substr(0,firstComma));
+		currString = currString.substr(firstComma+1);				
 	    }
 	    else if(firstQuote >= 0){//Let's handle quotes!
-		if(firstQuote != 0) { //We have an item containing quotes - but not the leadingitem. Throw an error - if we find any program that
+		if(firstQuote != 0) { //We have an item containing quotes - but not the leading item. Throw an error - if we find any program that
 				      //generates something like this, we can code special cases.
-		    failure("Found an entry with quote not leading on entry on line " + currLine+1 + " - not valid CSV!");
+		    failure("Found an entry with quote not leading on entry on line " + (parseInt(currLine)+1) + " - not valid CSV!");
 		    return;
 		}
 		
-		while(true)
+		var secondQuote = currString.indexOf('"', firstQuote+1);
+		if(secondQuote == -1) {
+		    failure("Parse error: found a single quote on line " + (parseInt(currLine)+1) + ".");
+		    return;
+		}
+		
+		var insideQuotes = true;
+		firstQuote = currString.indexOf('"', 1);
+		while(insideQuotes)
 		{
-		    var secondQuote = currString.indexOf('"', firstQuote+1);
-		    if(secondQuote == -1) {
-			failure("Parse error: found a single quote on line " + currLine+1);
-			return;
-		    }
-		    //Is secondQuote a doubled quote or the end of the string?
-		    if(currString.indexOf('"', secondQuote+1) == secondQuote+1) {
+		    secondQuote =  currString.indexOf('"', firstQuote+1);
+
+		    //secondQuote is a doubled quote
+		    if(secondQuote == firstQuote + 1) 
+		    {
 			currString = currString.substr(0,secondQuote)+currString.substr(secondQuote+1);//consume the second quote
 			firstQuote = currString.indexOf('"',secondQuote+1);
 		    }
-		    else{ //Clean up the quotes on both ends of the field
-			arrayBuild.push(currString.substr(1, secondQuote-1));
-			currString=currString.substr(secondQuote+2); //Consume the second quotation mark and the trailing comma
-			break;
+		    else//secondQuote isn't doubled - so it must be the end of this field.
+		    {
+			insideQuotes = false;
 		    }
 		}
-		
+		arrayBuild.push(currString.substr(1, firstQuote-1))
+		currString = currString.substr(firstQuote+2);//Consume the second quotation mark and the trailing comma
 	    }
 	    else { //We are in the last item in the string, which contains neither quotes nor commas. Push everything and quit the loop.
 		arrayBuild.push(currString);
@@ -139,3 +144,22 @@ function decodeCSV(fileBlob, success, failure)
     success(contents);    
 }
 	
+function hash_populate_form (results)
+{
+    //Takes the contents of array<string>[][] results and puts the first row into output_fields
+
+    if(results.length < 2) {//A single row
+	alert("only one row!");
+	return;
+    }
+    var email_field = document.getElementById("email_field");
+    var output_fields = document.getElementById("output_fields");
+    output_fields.options.length = 0;
+    email_field.options.length = 0;
+    output_fields.options.length = results[0].length;
+    email_field.options.length = 0;
+    for(var i in results[0]) {
+	output_fields.options[i] = new Option(results[0][i], i);
+	email_field.options[i] = new Option(results[0][i], i);
+    }
+}

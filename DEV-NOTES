@@ -1,0 +1,14 @@
+Why write our own CSV importer?
+
+-We need to insert pauses so we can return control to the browser
+ regularly - otherwise the browser will hang.
+
+-Ideally would like to change it to return a continuation, so we load
+the file while processing, rather than loading the entire file into
+memory. Haven't seen a CSV tool that'll do that.
+
+-We specifically want everything to stay in the format it was
+ originally - coercing values to numbers may be the wrong approach. I
+ haven't found a CSV library that doesn't attempt this. Note that
+ converting the text to numbers is in fact the correct option the vast
+ majority of the time, so everyone else is doing it right. 
