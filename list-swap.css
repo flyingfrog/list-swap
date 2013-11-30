@@ -56,3 +56,9 @@ div{
 #main_combine{
     display:none;
 }
+
+.preview_cell {
+    border: 1px solid blue;
+    padding: 0px;
+    margin: 0px;}
+

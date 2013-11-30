@@ -2,6 +2,7 @@
 Part of the List-Swap project.
 Copyright (c) 2013 by Nathan Gerratt, ngerratt@gmail.com
 */
+var storageArray = [];
 
 function selectOption(option)
 {
@@ -16,12 +17,16 @@ function selectOption(option)
 	document.getElementById("main_menu").style.display="none";
 	document.getElementById("main_combine").style.display="inline";
 	break;
-	
+
+    case "hash_process_file":
+	processHashEntries();
+	break;
+
     default:
     }
 }
 
-function hash_load_file()
+function hashLoadFile()
 {
     var filename = document.getElementById("hash_input_file").files[0];
     if(filename == null || filename == undefined || filename.name == null) {
@@ -82,11 +87,11 @@ function decodeCSV(fileBlob, success, failure)
 	return;
     }
 
-    var contents = [];
-    for (var currLine in lines)
+    storageArray = [];
+    for (var currLine=0; currLine < lines.length; currLine++)
     {
 	if(lines[currLine].indexOf('"') == -1) { //no quotes, so no escaping necessary.
-	    contents.push(lines[currLine].split(','));
+	    storageArray.push(lines[currLine].split(','));
 	    continue;
 	}
 	
@@ -139,9 +144,9 @@ function decodeCSV(fileBlob, success, failure)
 		break;
 	    }
 	}
-	contents.push(arrayBuild);
+	storageArray.push(arrayBuild);
     }
-    success(contents);    
+    success(storageArray);    
 }
 	
 function hash_populate_form (results)
@@ -158,8 +163,152 @@ function hash_populate_form (results)
     email_field.options.length = 0;
     output_fields.options.length = results[0].length;
     email_field.options.length = 0;
-    for(var i in results[0]) {
+    for(var i=0; i<results[0].length; i++) {
 	output_fields.options[i] = new Option(results[0][i], i);
 	email_field.options[i] = new Option(results[0][i], i);
     }
+}
+
+
+function processHashEntries()
+{
+    var caseOption;
+    var emailCaseField = document.getElementsByName("email_case");
+    for (var i=0; i<emailCaseField.length; i++) {
+	if(emailCaseField[i].checked) {
+	    caseOption=emailCaseField[i].value;
+	    break;
+	}
+    }
+
+    var hashMethod;
+    var hashMethodField = document.getElementsByName("hash_method");
+    for(var i=0;i<hashMethodField.length; i++) {
+	if(hashMethodField[i].checked) {
+	    hashMethod = hashMethodField[i].value;
+	}
+    }
+
+    var firstRowHeaders = document.getElementById("first_row_names").checked;
+    var columnToHash = document.getElementById("email_field").value;
+
+    var fieldsToOutput = [];
+    var outputFieldChooser = document.getElementById("output_fields").options;
+    for(var i=0; i<outputFieldChooser.length; i++) { 
+	if(outputFieldChooser[i].selected) {
+	    fieldsToOutput.push(outputFieldChooser[i].value);
+	}
+    }
+    
+    var prependValue = document.getElementById("prepend_text").value;
+    var postpendValue = document.getElementById("postpend_text").value;
+    
+    //We've set up the values - let's hash them!
+    hashArray(hashMethod, columnToHash, firstRowHeaders, caseOption, prependValue,
+	      postpendValue, fieldsToOutput,0);
+}
+
+function hashArray(hashMethod, columnToHash, firstRowHeaders, 
+		   caseOption, prependValue, postpendValue, outputFields,
+		   startIndex)
+{
+    var hashFunction;
+    var caseFunction;
+    var prePostAdder;
+
+    switch (hashMethod) {
+    case "MD5": hashFunction = CryptoJS.MD5; break;
+    case "SHA1": hashFunction = CryptoJS.SHA1; break;
+    };
+
+    switch (caseOption) {
+    case "upper":
+	caseFunction = function(str) {return str.toUpperCase();};
+	break;
+    case "lower":
+	caseFunction = function(str) {return str.toLowerCase();};
+	break;
+    case "keep":
+	caseFunction = function(str) {return str;};
+	break;
+    };
+
+    prePostAdder = function (str) {return prependValue + str + postpendValue};
+    if(startIndex == 0 && firstRowHeaders)
+    {
+	storageArray[0][storageArray[0].length] = storageArray[0][columnToHash] + "_HASHED";
+	startIndex = 1;
+    }
+    
+    //Handle restarting. 
+    for(var i=startIndex; i<storageArray.length; i++) {
+	var hashedValue = hashFunction(prePostAdder(caseFunction(storageArray[i][columnToHash]))).toString();
+	storageArray[i][storageArray[i].length]=hashedValue;
+    }
+}
+
+function previewResults() {
+    var resultsNum = document.getElementById("preview_num").value;
+    if(resultsNum == "") {
+	resultsNum = 10;
+    }
+    
+    var table = document.getElementById("hash_preview_table");
+/*    var all_rows = table.rows;
+    for (var i=0;i<all_rows.length;i++) {
+	table.deleteRow(all_rows[i]);
+    }
+*/
+    table.innerHTML = "";
+    for(var i=0; i<=resultsNum && i < storageArray.length; i++)
+    {
+	var row = table.insertRow(-1);
+	for (var j=0;j<storageArray[i].length; j++) {
+	    var cell = row.insertCell(-1);
+	    cell.innerHTML = storageArray[i][j];
+	    cell.className = "preview_cell";
+	}
+    }
+
+}
+
+function hashSaveOutput() {
+    storageArray.toString = function () {
+	var retVal = "";
+
+	for (var i = 0; i<this.length; i++)
+	{
+	    var currRow = "";
+	    for (var j=0; j<this[i].length; j++)
+	    {
+		var currItem = this[i][j];
+		if(j > 0) {
+		    currRow += ",";
+		}
+		var needsWrapping = false;
+		var commaLoc = currItem.indexOf(",");
+		if(commaLoc >= 0) {
+		    needsWrapping = true;
+		}
+
+		var quoteLoc = currItem.indexOf('"');
+		if(quoteLoc >= 0) {
+		    needsWrapping = true;
+		    currItem = currItem.replace (/"/g, '""');
+		}
+		if(needsWrapping) {
+		    currRow += '"' + currItem + '"';
+		}
+		else { 
+		    currRow += currItem;
+		}
+	    }
+	    retVal += currRow + "\n";
+	}
+	return retVal;
+    }
+
+    var blob = new Blob ([storageArray.toString()], {type: "text/plain"});
+    
+    saveAs( blob, "hashed.csv");
 }
