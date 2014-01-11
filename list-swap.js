@@ -10,12 +10,14 @@ function selectOption(option)
     {
     case "start_hash":
 	document.getElementById("main_menu").style.display="none";
-	document.getElementById("main_hash").style.display="inline";
+	document.getElementById("main_hash").style.display="block";
+	setStatusBar("hash", "Start by choosing a file to process.");
 	break;
 	
     case "start_combine":
 	document.getElementById("main_menu").style.display="none";
 	document.getElementById("main_combine").style.display="inline";
+	setStatusBar("combine","Start by uploading the two files you'd like to combine.");
 	break;
 
     case "hash_process_file":
@@ -26,6 +28,23 @@ function selectOption(option)
     }
 }
 
+function setStatusBar (process,message)
+{
+    var messageBox;
+    switch(process) {
+    case "hash":
+	messageBox = document.getElementById("main_hash_status");
+	break;
+    case "combine":
+	messageBox = document.getElementById("main_combine_status");
+	break;
+    default:
+	return;
+    }
+
+    messageBox.innerHTML=message;
+}
+
 function hashLoadFile()
 {
     var filename = document.getElementById("hash_input_file").files[0];
@@ -34,9 +53,10 @@ function hashLoadFile()
     } 
     else
     {
-	processCSV(filename, function(results) { hash_populate_form(results);},
-		   function(evt) { alert ("Couldn't load file: " + evt)});
-	
+	processCSV(filename, function(results) { hashPopulateForm(results);
+						 document.getElementById("main_hash_options_hider").style.display="none";
+						 setStatusBar("hash","Choose options for hashing.");},
+		   function(evt) { setStatusBar ("hash","Couldn't load file: " + evt)});
     }
 }
 
@@ -60,6 +80,7 @@ function processCSV(fileName, success, failure)
     reader.onload = function() {
 	decodeCSV(reader.result, success, failure);
     }
+    setStatusBar("hash","Loading file...");
     reader.readAsText(fileName);
 }
 
@@ -149,14 +170,10 @@ function decodeCSV(fileBlob, success, failure)
     success(storageArray);    
 }
 	
-function hash_populate_form (results)
+function hashPopulateForm (results)
 {
     //Takes the contents of array<string>[][] results and puts the first row into output_fields
 
-    if(results.length < 2) {//A single row
-	alert("only one row!");
-	return;
-    }
     var email_field = document.getElementById("email_field");
     var output_fields = document.getElementById("output_fields");
     output_fields.options.length = 0;
@@ -168,7 +185,6 @@ function hash_populate_form (results)
 	email_field.options[i] = new Option(results[0][i], i);
     }
 }
-
 
 function processHashEntries()
 {
@@ -203,9 +219,12 @@ function processHashEntries()
     var prependValue = document.getElementById("prepend_text").value;
     var postpendValue = document.getElementById("postpend_text").value;
     
+    setStatusBar("hash", "Hashing file values...");
     //We've set up the values - let's hash them!
     hashArray(hashMethod, columnToHash, firstRowHeaders, caseOption, prependValue,
 	      postpendValue, fieldsToOutput,0);
+    setStatusBar("hash", "Hashing complete. Preview or save the output.");
+    
 }
 
 function hashArray(hashMethod, columnToHash, firstRowHeaders, 
@@ -245,6 +264,7 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
 	var hashedValue = hashFunction(prePostAdder(caseFunction(storageArray[i][columnToHash]))).toString();
 	storageArray[i][storageArray[i].length]=hashedValue;
     }
+    document.getElementById("main_hash_output_hider").style.display="none";
 }
 
 function previewResults() {
@@ -269,6 +289,7 @@ function previewResults() {
 	    cell.className = "preview_cell";
 	}
     }
+    document.getElementById("preview_container").style.display="block";
 
 }
 

@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>List Swap Tool</title>
   <link type="text/css" rel="stylesheet" href="list-swap.css" />
   <script type="text/javascript" src="list-swap.js"></script>
@@ -14,39 +15,44 @@
 
 <body>
 <div id="main_menu">
+  Welcome to the list-swap tool.<br/>
+  Please choose which operation you would like to perform:
   <div id="start_hash" onClick='selectOption("start_hash");'>Create hashes of my e-mail list</div>
-  <div id="start_combine" onClick='selectOption("start_combine");'>Combine and dedup my list with another organization's</div>
+  <div id="start_combine" onClick='selectOption("start_combine");'>Combine and dedup my list with one from another organization</div>
 </div>
 
 <div id="main_hash">
-  <div id="main_hash_choose_file"><span>Select file to hash:
-      <input type="file" name="hash_input_file" id="hash_input_file"/></span><button id="hash_load_file" name="hash_load_file" onclick='hashLoadFile();'>Preprocess this file</button></div>
+  <div id="main_hash_choose_file">Select file to hash:
+      <input type="file" name="hash_input_file" id="hash_input_file"/><button id="hash_load_file" name="hash_load_file" onclick='hashLoadFile();'>Preprocess this file</button></div>
   
-  <div id="main_hash_options"><span>Options:<br/>
+  <div id="main_hash_options">
+    <div id="main_hash_options_hider"></div>
+    Options:<br/>
     <input type="radio" id="email_case_upper" name="email_case" value="upper"/>Make all addresses UPPER-CASE<br/>
     <input type="radio" id="email_case_lower" name="email_case" value="lower"/>Make all addresses lower-case<br/>
-    <input type="radio" id="email_case_keep" name="email_case" value="keep"/ checked="true">Keep address case as-is<br/>
-    <input type="checkbox"  id="first_row_names" name="first_row_names" checked="true">Are column names in Row 1?<br/>
+    <input type="radio" id="email_case_keep" name="email_case" value="keep" checked />Keep address case as-is<br/>
+    <input type="checkbox"  id="first_row_names" name="first_row_names" checked />Are column names in Row 1?<br/>
     Column containing e-mail:
     <select id="email_field" name="email_field"></select><br/>
-    Choose fields to add to output file:
+    Choose fields to include in output file:
     <select id="output_fields" name="output_fields" multiple></select><br/>
     Text to add before each entry: <input type="text" id="prepend_text" name="prepend_text"/><br/>
     Add after each entry: <input type="text" id="postpend_text" name="postpend_text"/><br/>
     Hash method:<br/>
-    <input type="radio" id="hash_method_md5" name="hash_method" value="MD5" checked="true"/>MD5<br/>
+    <input type="radio" id="hash_method_md5" name="hash_method" value="MD5" checked />MD5<br/>
     <input type="radio" id="hash_method_sha1" name="hash_method" value="SHA1"/>SHA1<br/>
     <button id="hash_process_file" name="hash_process_file" onClick='selectOption("hash_process_file");'>Hash my file!</button>
-  </span></div>
+  </div>
 
   <div id="main_hash_output">
-    <!-- Preview the first x records! -->
-    <div id="preview_output">Preview: first <input type="text" id="preview_num" name="preview_num"/> rows? <button id="hash_preview" name="hash_preview" onClick=previewResults();>Yes!</button>
-      <table id="hash_preview_table" name="hash_preview_table"></table>
+    <div id="main_hash_output_hider"></div>
+    <div id="main_hash_preview_output">Preview: first <input type="text" id="preview_num" name="preview_num" value="10" size="2" /> rows? <button id="hash_preview" name="hash_preview" onClick=previewResults();>Yes!</button>
     </div>
     <button id="save_output" onClick=hashSaveOutput();>Save your output file</button>
   </div>
+  <div id="main_hash_status"></div>
 </div>
+
 
 <div id="main_combine">
 Combine lists!
@@ -64,6 +70,14 @@ Choose:
 <div id="main_combine_output">
 Get your output files: your file | your partner org's file
 </div>
+<div id="main_combine_status"></div>
+</div>
+
+<div id="preview_container" onclick="document.getElementById('preview_container').style.display='none'">
+  <div id="preview_contents">
+    <table id="hash_preview_table"></table>
+  </div>
+  <div id="preview_legend">Click anywhere on the page to return to the main program.</div>
 
 </div>
 

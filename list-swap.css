@@ -1,57 +1,122 @@
 body{
     padding: 0px;
     margin: 0px;
-}
+    background-color: darkslateblue;
+    }
+
 div{
     border-style: solid;
 }
 
 #main_menu{
-    width:100%;
-}
-#start_hash{
-    display:inline-block;
-    width:49%;
-    align:center;
-    padding: 0px;
-    margin: 0px;
+    width:50%;
+    height: 60%;
+    text-align:center;
+    position: absolute;
+    top:25%;
+    left:25%;
+    padding: 10px;
+    background-color: sandybrown;
+    font-size: 150%;
 }
 
-#start_combine{
-    display:inline-block;
-    width:49%;
-    align:center;
-    padding:0px;
-    margin: 0px;
+#start_hash, #start_combine{
+    width:50%;
+    height: 35%;
+    text-align:center;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 0px;
+    vertical-align: middle;
+    font-size: large;
+    font-family: sans-serif;
+    border-radius: 10px;
+}
+
+#start_hash {
+    background-color:tan;
+}
+
+#start_combine {
+    background-color: goldenrod;
 }
 
 #main_hash{
     display:none;
+    background-color:tan;
+    width: 50%;
+    margin-left:auto;
+    margin-right: auto;
+    margin-top:10%;
 }
 
-#main_hash_choose_file{
-//    background-color: red;
+#main_hash_options,#main_hash_output{
+    position:relative;
 }
 
-#main_hash_choose_file span{
-//    visibility:hidden;
+#main_hash_options_hider, #main_hash_output_hider {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:grey;
+    opacity:0.5;
+    z-index:10;
+    border:0;
 }
 
-#main_hash_options{
-//    background-color: green;
+#main_hash_choose_file, #main_hash_options, #main_hash_output{
+    margin:5px;
+    padding:5px;
 }
 
-#main_hash_options span{
-//    visibility: hidden;
+#main_hash_preview_output{
+    border:0px;
 }
 
-#main_hash_output{
-//    background-color: blue;
+#main_hash_status, #main_combine_status{
+    border:0px;
+    background-color:yellow;
+    padding:5px;
 }
 
-#main_hash_output span{
-//    visibility: hidden;
+#preview_container{
+    position:absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height:100%;
+    background-color:grey;
+    opacity:.9;
+    z-index:15;
+    border:0;
+    display:none;
 }
+
+#preview_contents{
+    position:relative;
+    left:15%;
+    top:10%;
+    width:70%;
+    height: 80%;
+    background-color:white;
+    overflow:auto;
+    border:0;
+}
+
+#preview_legend{
+    position:relative;
+    border:0;
+    background-color:yellow;
+    width:70%;
+    left:15%;
+    top:10%;
+}
+
+
 
 #main_combine{
     display:none;
@@ -60,5 +125,6 @@ div{
 .preview_cell {
     border: 1px solid blue;
     padding: 0px;
-    margin: 0px;}
+    margin: 0px;
+}
 
