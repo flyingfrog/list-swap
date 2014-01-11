@@ -222,15 +222,21 @@ function processHashEntries()
     setStatusBar("hash", "Hashing file values...");
     //We've set up the values - let's hash them!
     hashArray(hashMethod, columnToHash, firstRowHeaders, caseOption, prependValue,
-	      postpendValue, fieldsToOutput,0);
-    setStatusBar("hash", "Hashing complete. Preview or save the output.");
+	      postpendValue, fieldsToOutput,0, function() {setStatusBar("hash", "Hashing complete. Preview or save the output.")
+							   document.getElementById("main_hash_output_hider").style.display="none";});
     
 }
 
 function hashArray(hashMethod, columnToHash, firstRowHeaders, 
 		   caseOption, prependValue, postpendValue, outputFields,
-		   startIndex)
+		   startIndex, success)
 {
+    if(startIndex > storageArray.length) {
+	success();
+	return;
+    }
+
+
     var hashFunction;
     var caseFunction;
     var prePostAdder;
@@ -259,12 +265,21 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
 	startIndex = 1;
     }
     
-    //Handle restarting. 
-    for(var i=startIndex; i<storageArray.length; i++) {
+    var endIndex = startIndex + 5000;
+    if(endIndex > storageArray.length) {
+	endIndex = storageArray.length;
+    }
+
+    for(var i=startIndex; i<endIndex; i++) {
 	var hashedValue = hashFunction(prePostAdder(caseFunction(storageArray[i][columnToHash]))).toString();
 	storageArray[i][storageArray[i].length]=hashedValue;
     }
-    document.getElementById("main_hash_output_hider").style.display="none";
+    
+    //Call ourselves after we do a little work, to not lock up the browser
+    setTimeout(function() {hashArray(hashMethod, columnToHash,firstRowHeaders,
+				     caseOption, prependValue, postpendValue, outputFields,
+				     endIndex+1, success)}, 50);
+    setStatusBar("hash", "Processed " + endIndex + " of " + (storageArray.length-1).toString() + " records.");
 }
 
 function previewResults() {
@@ -274,11 +289,7 @@ function previewResults() {
     }
     
     var table = document.getElementById("hash_preview_table");
-/*    var all_rows = table.rows;
-    for (var i=0;i<all_rows.length;i++) {
-	table.deleteRow(all_rows[i]);
-    }
-*/
+
     table.innerHTML = "";
     for(var i=0; i<=resultsNum && i < storageArray.length; i++)
     {
