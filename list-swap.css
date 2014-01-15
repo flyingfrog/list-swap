@@ -2,6 +2,7 @@ body{
     padding: 0px;
     margin: 0px;
     background-color: darkslateblue;
+    font-family: sans-serif;
     }
 
 div{
@@ -21,6 +22,7 @@ div{
 }
 
 #start_hash, #start_combine{
+    position: relative;
     width:50%;
     height: 35%;
     text-align:center;
@@ -29,10 +31,20 @@ div{
     margin-right: auto;
     margin-top: 10px;
     margin-bottom: 0px;
-    vertical-align: middle;
     font-size: large;
-    font-family: sans-serif;
     border-radius: 10px;
+}
+
+.vertical-middle {
+    position:absolute;
+    top:50%;
+    margin-top:-1em;
+    height:2em;
+    width:100%;
+    margin-left:auto;
+    margin-right:auto;
+    border:0px;
+    
 }
 
 #start_hash {
@@ -52,8 +64,41 @@ div{
     margin-top:10%;
 }
 
-#main_hash_options,#main_hash_output{
+#main_hash_options, #main_hash_output{
     position:relative;
+}
+
+.main_hash_row {
+    clear:both;
+    border: 2px solid black;
+    margin: 5px;
+}
+
+#main_hash_file {
+    height:40px;
+}
+
+.main_hash_left, .main_hash_right{
+    float:left;
+    width: auto;
+
+    border:none;
+    margin:0px;
+    padding: 5px;
+/*    height:25px;*/
+}
+
+.main_hash_left {
+    width: 25%;
+    border: none;
+}
+
+.main_hash_right {
+    border-left: 3px dotted green;
+}
+
+#main_hash_options {
+    height: 440px;
 }
 
 #main_hash_options_hider, #main_hash_output_hider {
@@ -69,18 +114,25 @@ div{
 }
 
 #main_hash_choose_file, #main_hash_options, #main_hash_output{
-    margin:5px;
-    padding:5px;
+/*    margin:5px;
+    padding:5px;*/
+}
+
+#main_hash_output {
+    height:65px;
 }
 
 #main_hash_preview_output{
     border:0px;
 }
 
-#main_hash_status, #main_combine_status{
+#main_status {
     border:0px;
     background-color:yellow;
     padding:5px;
+    position:absolute;
+    bottom:0px;
+    width:50%;
 }
 
 #preview_container{
@@ -90,7 +142,6 @@ div{
     width: 100%;
     height:100%;
     background-color:grey;
-    opacity:.9;
     z-index:15;
     border:0;
     display:none;

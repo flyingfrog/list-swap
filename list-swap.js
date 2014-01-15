@@ -30,18 +30,7 @@ function selectOption(option)
 
 function setStatusBar (process,message)
 {
-    var messageBox;
-    switch(process) {
-    case "hash":
-	messageBox = document.getElementById("main_hash_status");
-	break;
-    case "combine":
-	messageBox = document.getElementById("main_combine_status");
-	break;
-    default:
-	return;
-    }
-
+    var messageBox =  document.getElementById("main_status");
     messageBox.innerHTML=message;
 }
 
@@ -265,7 +254,7 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
 	startIndex = 1;
     }
     
-    var endIndex = startIndex + 5000;
+    var endIndex = startIndex + 3000-1;//The -1 makes the display numbers cleaner
     if(endIndex > storageArray.length) {
 	endIndex = storageArray.length;
     }
