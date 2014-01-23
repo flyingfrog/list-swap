@@ -11,13 +11,13 @@ function selectOption(option)
     case "start_hash":
 	document.getElementById("main_menu").style.display="none";
 	document.getElementById("main_hash").style.display="block";
-	setStatusBar("hash", "Start by choosing a file to process.");
+	setStatusBar("Start by choosing a file to process.");
 	break;
 	
     case "start_combine":
 	document.getElementById("main_menu").style.display="none";
 	document.getElementById("main_combine").style.display="inline";
-	setStatusBar("combine","Start by uploading the two files you'd like to combine.");
+	setStatusBar("Start by uploading the two files you'd like to combine.");
 	break;
 
     case "hash_process_file":
@@ -28,7 +28,7 @@ function selectOption(option)
     }
 }
 
-function setStatusBar (process,message)
+function setStatusBar (message)
 {
     var messageBox =  document.getElementById("main_status");
     messageBox.innerHTML=message;
@@ -44,8 +44,8 @@ function hashLoadFile()
     {
 	processCSV(filename, function(results) { hashPopulateForm(results);
 						 document.getElementById("main_hash_options_hider").style.display="none";
-						 setStatusBar("hash","Choose options for hashing.");},
-		   function(evt) { setStatusBar ("hash","Couldn't load file: " + evt)});
+						 setStatusBar("Choose options for hashing.");},
+		   function(evt) { setStatusBar ("Couldn't load file: " + evt)});
     }
 }
 
@@ -69,7 +69,7 @@ function processCSV(fileName, success, failure)
     reader.onload = function() {
 	decodeCSV(reader.result, success, failure);
     }
-    setStatusBar("hash","Loading file...");
+    setStatusBar("Loading file...");
     reader.readAsText(fileName);
 }
 
@@ -208,24 +208,28 @@ function processHashEntries()
     var prependValue = document.getElementById("prepend_text").value;
     var postpendValue = document.getElementById("postpend_text").value;
     
-    setStatusBar("hash", "Hashing file values...");
+    setStatusBar("Hashing file values...");
     //We've set up the values - let's hash them!
     hashArray(hashMethod, columnToHash, firstRowHeaders, caseOption, prependValue,
-	      postpendValue, fieldsToOutput,0, function() {setStatusBar("hash", "Hashing complete. Preview or save the output.")
+	      postpendValue, fieldsToOutput,0, function() {setStatusBar("Hashing complete. Preview or save the output.")
 							   document.getElementById("main_hash_output_hider").style.display="none";});
     
 }
 
 function hashArray(hashMethod, columnToHash, firstRowHeaders, 
 		   caseOption, prependValue, postpendValue, outputFields,
-		   startIndex, success)
+		   startIndex, success, numRecords)
 {
     if(startIndex > storageArray.length) {
 	success();
 	return;
     }
 
-
+    /*We'll calculate how many records to run at any given time. If we
+     * don't get one, start with something small.*/
+    if(isNaN (numRecords)) {
+	numRecords = 500;
+    }
     var hashFunction;
     var caseFunction;
     var prePostAdder;
@@ -254,21 +258,34 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
 	startIndex = 1;
     }
     
-    var endIndex = startIndex + 3000-1;//The -1 makes the display numbers cleaner
+    var endIndex = startIndex + numRecords;
     if(endIndex > storageArray.length) {
 	endIndex = storageArray.length;
     }
+    
+    var startTime = +new Date();
 
     for(var i=startIndex; i<endIndex; i++) {
 	var hashedValue = hashFunction(prePostAdder(caseFunction(storageArray[i][columnToHash]))).toString();
 	storageArray[i][storageArray[i].length]=hashedValue;
     }
+
+    var stopTime = +new Date();
+    /*Our goal is 75 ms per invocation*/
+    var runtimeGoal = 75;
+	
+    if(stopTime - startTime > (runtimeGoal * 1.1)) {
+	numRecords = Math.floor(numRecords * .9);
+    }
+    else if( stopTime - startTime < (runtimeGoal * .9)) {
+	numRecords = Math.floor(numRecords * 1.1);
+    }
     
     //Call ourselves after we do a little work, to not lock up the browser
     setTimeout(function() {hashArray(hashMethod, columnToHash,firstRowHeaders,
 				     caseOption, prependValue, postpendValue, outputFields,
-				     endIndex+1, success)}, 50);
-    setStatusBar("hash", "Processed " + endIndex + " of " + (storageArray.length-1).toString() + " records.");
+				     endIndex+1, success, numRecords)}, 25);
+    setStatusBar("Processed " + endIndex + " of " + (storageArray.length-1).toString() + " records. (" + Math.floor(endIndex / storageArray.length * 100) + "%)");
 }
 
 function previewResults() {
