@@ -3,141 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>List Swap Tool</title>
-  <link type="text/css" rel="stylesheet" href="list-swap.css" />
-  <script type="text/javascript" src="list-swap.js"></script>
-
-  <script type="text/javascript" src="md5.js"></script>
-  <script type="text/javascript" src="sha1.js"></script>
-  
-  <script type="text/javascript" src="FileSaver/FileSaver.js"></script>
-
+  <link type="text/css" rel="stylesheet" href="content/list-swap.css" />
 </head>
 
 <body>
-<div id="main_menu">
+<div id="main_menu" class="main_content">
   Welcome to the list-swap tool.<br/>
-  Please choose which operation you would like to perform:
-  <a href='javascript:selectOption("start_hash");'><div id="start_hash" ><div class="vertical_middle">Create hashes of my e-mail list</div></div></a>
-  <a href='javascript:selectOption("start_combine");'><div id="start_combine"><div class="vertical_middle">Combine and dedup my list with one from another organization</div></div></a>
+  Please select the operation you would like to perform.
+  <a href="content/hash.html" class="main_button">Create hashes of my e-mail list</a>
+  <a href="content/combine.html" class="main_button">Combine and dedup my list with one from another organization</a>
 </div>
-
-<div id="main_hash">
-  <div id="main_hash_file" class="main_hash_row">
-  <div class="main_hash_left">
-    <div class="vertical_middle">Select a file to hash.</div>
-  </div>
-  <div id="main_hash_choose_file" class="main_hash_right">
-    <input type="file" name="hash_input_file" id="hash_input_file"/>
-    <button id="hash_load_file" name="hash_load_file" onclick='hashLoadFile();'>Preprocess this file</button>
-  </div>
-  </div>
-  <div id="main_hash_options" class="main_hash_row">
-    <div id="main_hash_options_hider"></div>
-    <div class="main_hash_left">
-      <div class="vertical_middle">Set options for how you would like your file to be hashed.</div>
-    </div>
-    <div id="main_hash_options_content" class="main_hash_right">
-      <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div> 
-	<div class="main_hash_options_label"><label for="email_case_upper">Make all addresses UPPER-CASE</label><br/>
-	  <label for="email_case_lower">Make all addresses lower-case</label><br/>
-	  <label for="email_case_keep">Keep address case As-Is</label></div>
-	<div class="main_hash_options_input">
-	  <input type="radio" id="email_case_upper" name="email_case" value="upper"/><br/>
-	  <input type="radio" id="email_case_lower" name="email_case" value="lower"/><br/>
-	  <input type="radio" id="email_case_keep" name="email_case" value="keep" checked /><br/></div>
-      </div>
-
-
-    <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div> 
-      <div class="main_hash_options_label"><label for="first_row_names">Are column names in Row 1?</label></div>
-      <div class="main_hash_options_input"><input type="checkbox"  id="first_row_names" name="first_row_names" checked /></div>
-    </div>
-    <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div> 
-      <div class="main_hash_options_label">Column containing e-mail:</div>
-      <div class="main_hash_options_input"> <select id="email_field" name="email_field"></select></div>
-    </div>
-
-
-    <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div> 
-      <div class="main_hash_options_label">Fields to include in output file:</div>
-      <div class="main_hash_options_input"><select id="output_fields" name="output_fields" multiple></select></div>
-    </div>
-
-
-    <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div> 
-     <div class="main_hash_options_label">Add text before each entry <br/>
-       Add text after each entry </div>
-     <div class="main_hash_options_input">  <input type="text" id="prepend_text" name="prepend_text" size="10"/><br/>
-       <input type="text" id="postpend_text" name="postpend_text" size="10"/></div>
-    </div>
- 
-    <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div>
-      <div class="main_hash_options_label">Hash algorithm:<br/>
-	MD5<br/>
-	SHA1<br/></div>
-      <div class="main_hash_options_input"><br/>
-	<input type="radio" id="hash_method_md5" name="hash_method" value="MD5" checked /><br/>
-	<input type="radio" id="hash_method_sha1" name="hash_method" value="SHA1"/>
-      </div>
-    </div>  
-    
-    <div class="main_hash_options_row">
-	<div class="main_hash_options_tooltip">?</div> 
-	<div class="main_hash_options_label"></div>
-	<div class="main_hash_options_input">
-	  <button id="hash_process_file" name="hash_process_file" onClick='selectOption("hash_process_file");'>Hash my file!</button>
-	</div>
-</div>
-
-    </div>
-  </div>
-
-  <div id="main_hash_output" class="main_hash_row">
-    <div id="main_hash_output_hider"></div>
-    <div class="main_hash_left">
-      <div class="vertical_middle">Preview your output and save.</div>
-    </div>
-    <div id="main_hash_output_content" class="main_hash_right">
-      <div id="main_hash_preview_output">Preview first <input type="text" id="preview_num" name="preview_num" value="10" size="2" /> rows? <button id="hash_preview" name="hash_preview" onClick=previewResults();>Preview</button>
-    </div>
-    <button id="save_output" onClick=hashSaveOutput();>Save your output file</button>
-    </div>
-  </div>
-  <div id="main_status"></div>
-</div>
-
-
-<div id="main_combine">
-Combine lists!
-<div id="main_combine_files">
-Upload your org's file:<br/>
-Upload your partner org's file:<br/>
-</div>
-<div id="main_combine_settings">
-Choose:
-<ul><li>The shared list - contacts who are on both lists. You might use this as an exclusion file for a list swap.</li>
-<li>Unique recorts - contacts who are on only one list. You might use this as a mailing file for a list swap.</li></ul>
-<button id="main_combine_process" name="main_combine_process">Go!</button>
-</div>
-
-<div id="main_combine_output">
-Get your output files: your file | your partner org's file
-</div>
-<div id="main_combine_status"></div>
-</div>
-
-<div id="preview_container" onclick="document.getElementById('preview_container').style.display='none'">
-  <div id="preview_contents">
-    <table id="hash_preview_table"></table>
-  </div>
-  <div id="preview_legend">Click anywhere on the page to return to the main program.</div>
-</div>
-
 </body>
 </html>
+

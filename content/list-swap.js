@@ -11,7 +11,6 @@ function selectOption(option)
     case "start_hash":
 	document.getElementById("main_menu").style.display="none";
 	document.getElementById("main_hash").style.display="block";
-	setStatusBar("Start by choosing a file to process.");
 	break;
 	
     case "start_combine":
@@ -21,7 +20,7 @@ function selectOption(option)
 	break;
 
     case "hash_process_file":
-	processHashEntries();
+	prepareHashArray();
 	break;
 
     default:
@@ -30,26 +29,27 @@ function selectOption(option)
 
 function setStatusBar (message)
 {
-    var messageBox =  document.getElementById("main_status");
-    messageBox.innerHTML=message;
+    var messageBox = document.getElementById("main_status");
+    messageBox.innerHTML = message;
 }
 
 function hashLoadFile()
 {
     var filename = document.getElementById("hash_input_file").files[0];
     if(filename == null || filename == undefined || filename.name == null) {
+	setStatusBar("Please select a file to continue.");
 	return;
     } 
     else
     {
-	processCSV(filename, function(results) { hashPopulateForm(results);
+	prepareDecodeCSV(filename, function(results) { hashPopulateForm(results);
 						 document.getElementById("main_hash_options_hider").style.display="none";
 						 setStatusBar("Choose options for hashing.");},
 		   function(evt) { setStatusBar ("Couldn't load file: " + evt)});
     }
 }
 
-function processCSV(fileName, success, failure)
+function prepareDecodeCSV(fileName, success, failure)
 {
     //Takes input filename, calls success with argument of an array[][] decoded from FileName or calls failure with error message.
     
@@ -75,6 +75,7 @@ function processCSV(fileName, success, failure)
 
 function decodeCSV(fileBlob, success, failure)
 {
+
     //Given input text in fileBlob, calls success with an array[][] decoded from fileBlob or failure with error message.
 
 	/*CSV SYNTAX (RFC 4180):
@@ -91,7 +92,7 @@ function decodeCSV(fileBlob, success, failure)
 	failure ("Input file not correctly read");
 	return;
     }
-    var lines = fileBlob.split(/\r\n|\n/g); // start by breaking into hunks. I've seen files on Windows using Unix line endings, so work with either.
+    var lines = fileBlob.split(/\r\n|\n|\r/g); // start by breaking into hunks. I've seen files on Windows using Unix line endings, so work with either.
     if(lines.length <= 1) {//One line or empty list?
 	failure("One or no lines detected in file. Is this a CSV file?");
 	return;
@@ -115,11 +116,13 @@ function decodeCSV(fileBlob, success, failure)
 	    if(firstComma >=0 && (firstQuote == -1 || firstComma < firstQuote)) { //The first entry in currString doesn't have quotes.
 		arrayBuild.push(currString.substr(0,firstComma));
 		currString = currString.substr(firstComma+1);				
-	    }
-	    else if(firstQuote >= 0){//Let's handle quotes!
+	    } else if(firstComma == -1 && firstQuote == -1) { //There's just one column in this row
+		arrayBuild.push(currString);
+		break;		
+	    } else if(firstQuote >= 0){//Let's handle quotes!
 		if(firstQuote != 0) { //We have an item containing quotes - but not the leading item. Throw an error - if we find any program that
-				      //generates something like this, we can code special cases.
-		    failure("Found an entry with quote not leading on entry on line " + (parseInt(currLine)+1) + " - not valid CSV!");
+		                      //generates something like this, we can code special cases.
+		    failure("Found an entry with quote not leading on entry on line " + (parseInt(currLine)+1) + " (not valid CSV?)");
 		    return;
 		}
 		
@@ -156,6 +159,10 @@ function decodeCSV(fileBlob, success, failure)
 	}
 	storageArray.push(arrayBuild);
     }
+    if(storageArray.length == 0) {
+	failure("The input file was empty or unreadable. Please try again.");
+	return;
+    }
     success(storageArray);    
 }
 	
@@ -175,7 +182,7 @@ function hashPopulateForm (results)
     }
 }
 
-function processHashEntries()
+function prepareHashArray()
 {
     var caseOption;
     var emailCaseField = document.getElementsByName("email_case");

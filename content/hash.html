@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>List Swap Tool</title>
+    <link type="text/css" rel="stylesheet" href="list-swap.css" />
+    <script type="text/javascript" src="list-swap.js"></script>
+
+    <script type="text/javascript" src="md5.js"></script>
+    <script type="text/javascript" src="sha1.js"></script>
+    
+    <script type="text/javascript" src="FileSaver/FileSaver.js"></script>
+  </head>
+
+  <body>
+    <div class="main_content">
+      <div class="main_hash_row">
+	<div class="main_hash_left">1. Select a file to hash.</div>
+	<div class="main_hash_right">
+	  <input type="file" name="hash_input_file" id="hash_input_file"/>
+	  <button id="hash_load_file" name="hash_load_file" onclick='hashLoadFile();'>Preprocess this file</button>
+	</div>
+      </div>
+      <div class="main_hash_row" id="main_hash_options">
+	<div id="main_hash_options_hider" class="options_hider"></div>
+	<div class="main_hash_left">2. Set options for how you would like your file to be hashed.</div>
+	<div class="main_hash_right">
+
+	  <div class="main_hash_options_row">
+	    <h3>Choose how to adjust the addresses' case.<span class="main_hash_options_tooltip">?</span></h3>
+	    <p><input type="radio" id="email_case_upper" name="email_case" value="upper"/>
+	      <label for="email_case_upper">Make all addresses UPPER-CASE</label></p>
+	    <p><input type="radio" id="email_case_lower" name="email_case" value="lower"/>
+	      <label for="email_case_lower">Make all addresses lower-case</label></p>
+	    <p> <input type="radio" id="email_case_keep" name="email_case" value="keep" checked />
+	      <label for="email_case_keep">Keep address case As-Is</label></p>
+	  </div>
+	  
+	  <div class="main_hash_options_row">
+	    <h3>Set header options.<span class="main_hash_options_tooltip">?</span></h3> 
+	    <input type="checkbox"  id="first_row_names" name="first_row_names" checked />
+	    <label for="first_row_names">Column names are in Row 1.</label>
+	  </div>
+	  
+	  <div class="main_hash_options_row">
+	    <h3>Choose which field to hash.<span class="main_hash_options_tooltip">?</span></h3>
+	    <p>Column containing e-mail<select id="email_field" name="email_field"></select></p>
+	  </div>
+
+
+	  <div class="main_hash_options_row">
+	    <h3>Select which fields to include in the output file.<span class="main_hash_options_tooltip">?</span></h3>
+	    <p>Include in the output:<select id="output_fields" name="output_fields" multiple></select></p>
+	  </div>
+
+
+	  <div class="main_hash_options_row">
+	    <h3>Choose text to add before or after the address.<span class="main_hash_options_tooltip">?</span></h3>
+	    <p><label for="prepend_text">Add before each address:</label>
+		<input type="text" id="prepend_text" name="prepend_text" size="10"/></p>
+	    <p><label for="postpend_text">Add after each address:</label>
+		<input type="text" id="postpend_text" name="postpend_text" size="10"/></p>
+	  </div>
+	  
+	  <div class="main_hash_options_row">
+	    <h3>Choose a hashing algorithm.<span class="main_hash_options_tooltip">?</span></h3>
+	    <p><input type="radio" id="hash_method_md5" name="hash_method" value="MD5" checked />
+	      <label for="hash_method_md5">MD5</label></p>
+	    <p><input type="radio" id="hash_method_sha1" name="hash_method" value="SHA1"/>
+	      <label for="hash_method_sha1">SHA1</label></p>
+	  </div>  
+	  
+	  <div class="main_hash_options_row">
+	    <h3>Process your file!<span class="main_hash_options_tooltip">?</span></h3>
+	    <button id="hash_process_file" name="hash_process_file" onClick='selectOption("hash_process_file");'>Hash my file!</button>
+	  </div>
+	</div>
+      </div>
+
+      <div id="main_hash_output" class="main_hash_row">
+	<div id="main_hash_output_hider" class="options_hider"></div>
+	<div class="main_hash_left">3. Preview your output and save.</div>
+	<div id="main_hash_output_content" class="main_hash_right">
+	  <div id="main_hash_preview_output">How many output rows to preview?<input type="text" id="preview_num" name="preview_num" value="10" size="2" /><button id="hash_preview" name="hash_preview" onClick=previewResults();>Preview</button>
+	  </div>
+	  <button id="save_output" onClick=hashSaveOutput();>Save your output file</button>
+	</div>
+      </div>
+      <div id="main_status">Start by choosing a file to process.</div>
+    </div>
+</div>
+
+<div id="preview_container" onclick="document.getElementById('preview_container').style.display='none'">
+  <div id="preview_contents">
+    <table id="hash_preview_table"></table>
+  </div>
+  <div id="preview_legend">Click anywhere on the page to return to the main program.</div>
+</div>
+
+</body>
+</html>
