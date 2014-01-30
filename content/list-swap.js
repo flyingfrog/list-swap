@@ -177,8 +177,8 @@ function hashPopulateForm (results)
     output_fields.options.length = results[0].length;
     email_field.options.length = 0;
     for(var i=0; i<results[0].length; i++) {
-	output_fields.options[i] = new Option(results[0][i], i);
-	email_field.options[i] = new Option(results[0][i], i);
+	output_fields.options[i] = new Option(results[0][i], i, true, true);
+	email_field.options[i] = new Option(results[0][i], i, true, true);
     }
 }
 

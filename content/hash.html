@@ -5,6 +5,7 @@
     <title>List Swap Tool</title>
     <link type="text/css" rel="stylesheet" href="list-swap.css" />
     <script type="text/javascript" src="list-swap.js"></script>
+    <script type="text/javascript" src="hash.js"></script>
 
     <script type="text/javascript" src="md5.js"></script>
     <script type="text/javascript" src="sha1.js"></script>
@@ -27,17 +28,26 @@
 	<div class="main_hash_right">
 
 	  <div class="main_hash_options_row">
-	    <h3>Choose how to adjust the addresses' case.<span class="main_hash_options_tooltip">?</span></h3>
-	    <p><input type="radio" id="email_case_upper" name="email_case" value="upper"/>
+	    <h3>Choose how to adjust the addresses' case.<span class="main_hash_options_tooltip" id="tooltip_case" name="tooltip">?</span></h3>
+	    <div class="tooltip_content"
+		 id="tooltip_case_content">Modify the case of the field before it is hashed. Use the same setting as your
+	      partners. You should use either upper or lower unless your source file is already standardized because e-mail
+	      addresses are generally case-insensitive.</div>
+	    <p><input type="radio" id="email_case_upper" name="email_case" value="upper" checked />
 	      <label for="email_case_upper">Make all addresses UPPER-CASE</label></p>
 	    <p><input type="radio" id="email_case_lower" name="email_case" value="lower"/>
 	      <label for="email_case_lower">Make all addresses lower-case</label></p>
-	    <p> <input type="radio" id="email_case_keep" name="email_case" value="keep" checked />
+	    <p> <input type="radio" id="email_case_keep" name="email_case" value="keep" />
 	      <label for="email_case_keep">Keep address case As-Is</label></p>
 	  </div>
 	  
 	  <div class="main_hash_options_row">
-	    <h3>Set header options.<span class="main_hash_options_tooltip">?</span></h3> 
+	    <h3>Set header options.<span class="main_hash_options_tooltip" name="tooltip" id="tooltip_first_row">?</span></h3>
+	    <div class="tooltip_content" id="tooltip_first_row_content">
+	      Leave this checked if the first row of your file contains row headers. If this is selected, the first row
+	      of the output file will contain this header followed by _HASHED. If you uncheck this box, the header will be the
+	      hashed output of that row.
+	    </div>
 	    <input type="checkbox"  id="first_row_names" name="first_row_names" checked />
 	    <label for="first_row_names">Column names are in Row 1.</label>
 	  </div>
