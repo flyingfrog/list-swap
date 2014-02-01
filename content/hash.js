@@ -4,7 +4,7 @@
 */
 
 window.onload = function () {
-    var tooltips = document.getElementsByName("tooltip");
+    var tooltips = document.getElementsByClassName("main_hash_options_tooltip");
     for (var i=0; i<tooltips.length; i++)
     {
 	var currTooltip = tooltips[i];
@@ -17,4 +17,4 @@ window.onload = function () {
 	    document.getElementById(this.id + "_content").style.display = "none";
 	}
     }
-}
+} 
