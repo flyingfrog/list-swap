@@ -43,7 +43,7 @@ function hashLoadFile()
     else
     {
 	prepareDecodeCSV(filename, function(results) { hashPopulateForm(results);
-						 document.getElementById("main_hash_options_hider").style.display="none";
+						 document.getElementById("options_hider").style.display="none";
 						 setStatusBar("Choose options for hashing.");},
 		   function(evt) { setStatusBar ("Couldn't load file: " + evt)});
     }
@@ -219,7 +219,7 @@ function prepareHashArray()
     //We've set up the values - let's hash them!
     hashArray(hashMethod, columnToHash, firstRowHeaders, caseOption, prependValue,
 	      postpendValue, fieldsToOutput,0, function() {setStatusBar("Hashing complete. Preview or save the output.")
-							   document.getElementById("main_hash_output_hider").style.display="none";});
+							   document.getElementById("output_hider").style.display="none";});
     
 }
 

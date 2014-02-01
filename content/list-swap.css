@@ -68,21 +68,21 @@ p {
     background-color:#559955;
 }
 
-.main_hash_row {
+.main_row {
     border: 2px solid black;
     margin: 2px;
     position: relative;
     top: 0;
 }
 
-.main_hash_row:after {
+.main_row:after {
     clear: both;
     content: " ";
     visibility: hidden;
     display:block;
 }
 
-.main_hash_left, .main_hash_right{
+.left, .right{
     float:left;
     width: auto;
     border:0;
@@ -92,17 +92,17 @@ p {
     height: 100%;
 }
 
-.main_hash_left {
+.left {
     width: 25%;
     border: 0;
 }
 
-.main_hash_right {
+.right {
     border-left: 3px dotted green;
     width: 75%;
 }
 
-.main_hash_options_row {
+.options_row {
     clear: both;
     border: 0;
     border-bottom: 1px dotted black;
@@ -111,19 +111,19 @@ p {
     overflow: auto;
 }
 
-.main_hash_options_row:last-child {
+.options_row:last-child {
     border-bottom: 0;
 }
 
-.main_hash_options_label, .main_hash_options_input {
+/*.main_hash_options_label, .main_hash_options_input {
     float: left;
     border: 0;
     padding: 5px;
     margin: 0;
     position: relative;
-}
+}*/
 
-.main_hash_options_tooltip {
+.tooltip {
     display: inline-block;
     border-radius: 100%;
     border: 1px solid black;
@@ -136,7 +136,7 @@ p {
     font-weight: bold;
 }
 
-.main_hash_options_tooltip:hover{
+.tooltip:hover{
     background-color: #AAAAFF;
 }
 
@@ -150,7 +150,7 @@ p {
     font-size: smaller;
     z-index: 500;
 }
-
+/*
 .main_hash_options_label {
     width: 50%;
     text-align: right;
@@ -159,8 +159,9 @@ p {
 .main_hash_options_input {
     width: 25%;
 }
+*/
 
-.options_hider {
+.hider {
     position:absolute;
     top:0;
     left:0;
