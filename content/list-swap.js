@@ -29,7 +29,7 @@ function selectOption(option)
 
 function setStatusBar (message)
 {
-    var messageBox = document.getElementById("main_status");
+    var messageBox = document.getElementById("status");
     messageBox.innerHTML = message;
 }
 

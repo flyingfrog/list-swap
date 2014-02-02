@@ -26,7 +26,7 @@
 	  </div>
 	</div>
       </div>
-      <div class="main_row" id="main_hash_options">
+      <div class="main_row">
 	<div id="options_hider" class="hider"></div>
 	<div class="left">2. Set options for how you would like your file to be hashed.</div>
 	<div class="right">
@@ -107,17 +107,16 @@
 	      Click here to start processing your file. Options for previewing and saving your output will become available
 	      when processing is complete.
 	    </div>
-	    <button id="hash_process_file" name="hash_process_file" onClick='selectOption("hash_process_file");'>Hash my file!</button>
+	    <button onClick='selectOption("hash_process_file");'>Hash my file!</button>
 	  </div>
 	</div>
       </div>
 
-      <div id="main_hash_output" class="main_row">
+      <div class="main_row">
 	<div id="output_hider" class="hider"></div>
 	<div class="left">3. Preview your output and save.</div>
 	<div class="right">
-	  <div id="main_hash_preview_output">How many output rows to preview?<input type="text" id="preview_num" name="preview_num" value="10" size="2" /><button id="hash_preview" name="hash_preview" onClick=previewResults();>Preview</button> <span class="tooltip" id="tooltip_previewsave">?</span>
-	  </div>
+	  <p>How many output rows to preview?<input type="text" id="preview_num" name="preview_num" value="10" size="2" /><button id="hash_preview" name="hash_preview" onClick=previewResults();>Preview</button> <span class="tooltip" id="tooltip_previewsave">?</span></p>
 	  <div class="tooltip_content" id="tooltip_previewsave_content">
 	    You can preview the output to make sure it looks the way you want and make sure that the results for the first few
 	    rows are what you expect. When you're ready, save the completed file to your computer.
@@ -125,7 +124,7 @@
 	  <button id="save_output" onClick=hashSaveOutput();>Save your output file</button>
 	</div>
       </div>
-      <div id="main_status">Start by choosing a file to process.</div>
+      <div id="status">Start by choosing a file to process.</div>
     </div>
 </div>
 

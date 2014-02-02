@@ -173,15 +173,7 @@ p {
     border:0;
 }
 
-#main_hash_output {
-    height:65px;
-}
-
-#main_hash_preview_output{
-    border:0px;
-}
-
-#main_status {
+#status {
     border:0px;
     background-color:yellow;
     padding:5px;
