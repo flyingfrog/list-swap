@@ -3,6 +3,7 @@ Part of the List-Swap project.
 Copyright (c) 2013 by Nathan Gerratt, ngerratt@gmail.com
 */
 var storageArray = [];
+var options = {};
 
 function selectOption(option)
 {
@@ -99,6 +100,7 @@ function decodeCSV(fileBlob, success, failure)
     }
 
     storageArray = [];
+    options["hashField"] = -1;
     for (var currLine=0; currLine < lines.length; currLine++)
     {
 	if(lines[currLine] == "" && currLine == lines.length-1) { //Last  line of the file is terminated with \n; don't hash that
@@ -107,6 +109,10 @@ function decodeCSV(fileBlob, success, failure)
 
 	if(lines[currLine].indexOf('"') == -1) { //no quotes, so no escaping necessary.
 	    storageArray.push(lines[currLine].split(','));
+	    if(storageArray[storageArray.length -1].length >= options["hashField"])
+	    {
+		options["hashField"] = storageArray[storageArray.length-1].length;
+	    }
 	    continue;
 	}
 	
@@ -162,6 +168,10 @@ function decodeCSV(fileBlob, success, failure)
 	    }
 	}
 	storageArray.push(arrayBuild);
+	if(arrayBuild.length >= options[hashField])
+	    {
+		options["hashField"] = arrayBuild.length;
+	    }
     }
     if(storageArray.length == 0) {
 	failure("The input file was empty or unreadable. Please try again.");
@@ -208,13 +218,14 @@ function prepareHashArray()
     var firstRowHeaders = document.getElementById("first_row_names").checked;
     var columnToHash = document.getElementById("email_field").value;
 
-    var fieldsToOutput = [];
+    options["fieldsToOutput"] = [];
     var outputFieldChooser = document.getElementById("output_fields").options;
     for(var i=0; i<outputFieldChooser.length; i++) { 
 	if(outputFieldChooser[i].selected) {
-	    fieldsToOutput.push(outputFieldChooser[i].value);
-	}
+	    options["fieldsToOutput"].push(outputFieldChooser[i].value);
+	}	
     }
+    options["fieldsToOutput"].push(options["hashField"]);
     
     var prependValue = document.getElementById("prepend_text").value;
     var postpendValue = document.getElementById("postpend_text").value;
@@ -222,7 +233,7 @@ function prepareHashArray()
     setStatusBar("Hashing file values...");
     //We've set up the values - let's hash them!
     hashArray(hashMethod, columnToHash, firstRowHeaders, caseOption, prependValue,
-	      postpendValue, fieldsToOutput,0, function() {setStatusBar("Hashing complete. Preview or save the output.")
+	      postpendValue, options["fieldsToOutput"],0, function() {setStatusBar("Hashing complete. Preview or save the output.")
 							   document.getElementById("output_hider").style.display="none";});
     
 }
@@ -231,7 +242,7 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
 		   caseOption, prependValue, postpendValue, outputFields,
 		   startIndex, success, numRecords)
 {
-    if(startIndex > storageArray.length) {
+    if(startIndex >= storageArray.length) {
 	success();
 	return;
     }
@@ -265,7 +276,7 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
     prePostAdder = function (str) {return prependValue + str + postpendValue};
     if(startIndex == 0 && firstRowHeaders)
     {
-	storageArray[0][storageArray[0].length] = storageArray[0][columnToHash] + "_HASHED";
+	storageArray[0][ options["hashField"] ] = storageArray[0][columnToHash] + "_HASHED";
 	startIndex = 1;
     }
     
@@ -278,7 +289,7 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
 
     for(var i=startIndex; i<endIndex; i++) {
 	var hashedValue = hashFunction(prePostAdder(caseFunction(storageArray[i][columnToHash]))).toString();
-	storageArray[i][storageArray[i].length]=hashedValue;
+	storageArray[i][ options["hashField"] ]=hashedValue;
     }
 
     var stopTime = +new Date();
@@ -295,7 +306,7 @@ function hashArray(hashMethod, columnToHash, firstRowHeaders,
     //Call ourselves after we do a little work, to not lock up the browser
     setTimeout(function() {hashArray(hashMethod, columnToHash,firstRowHeaders,
 				     caseOption, prependValue, postpendValue, outputFields,
-				     endIndex+1, success, numRecords)}, 25);
+				     endIndex, success, numRecords)}, 25);
     setStatusBar("Processed " + endIndex + " of " + (storageArray.length-1).toString() + " records. (" + Math.floor(endIndex / storageArray.length * 100) + "%)");
 }
 
@@ -311,9 +322,10 @@ function previewResults() {
     for(var i=0; i<=resultsNum && i < storageArray.length; i++)
     {
 	var row = table.insertRow(-1);
-	for (var j=0;j<storageArray[i].length; j++) {
+	//for (var j=0;j<storageArray[i].length; j++) {
+	for (var j=0; j<options["fieldsToOutput"].length; j++) {
 	    var cell = row.insertCell(-1);
-	    cell.innerHTML = storageArray[i][j];
+	    cell.innerHTML = storageArray[i][ options["fieldsToOutput"][j] ];
 	    cell.className = "preview_cell";
 	}
     }
@@ -328,9 +340,13 @@ function hashSaveOutput() {
 	for (var i = 0; i<this.length; i++)
 	{
 	    var currRow = "";
-	    for (var j=0; j<this[i].length; j++)
+	    for(var j=0; j<options["fieldsToOutput"].length; j++)
 	    {
-		var currItem = this[i][j];
+		var currItem = this[i][ options["fieldsToOutput"][j] ];
+		if(currItem == undefined)  {
+		    alert(this[i]);
+		}
+		
 		if(j > 0) {
 		    currRow += ",";
 		}
