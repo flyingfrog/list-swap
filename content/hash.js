@@ -4,7 +4,7 @@
 */
 
 window.onload = function () {
-    var tooltips = document.getElementsByClassName("main_hash_options_tooltip");
+    var tooltips = document.getElementsByClassName("tooltip");
     for (var i=0; i<tooltips.length; i++)
     {
 	var currTooltip = tooltips[i];

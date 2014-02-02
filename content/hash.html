@@ -20,6 +20,10 @@
 	<div class="right">
 	  <input type="file" name="hash_input_file" id="hash_input_file"/>
 	  <button id="hash_load_file" name="hash_load_file" onclick='hashLoadFile();'>Preprocess this file</button>
+	  <span class="tooltip" id="tooltip_inputfile">?</span>
+	  <div class="tooltip_content" id="tooltip_inputfile_content">
+	    Select your file to process. Files must be in CSV format. Your options for how to process the file will be available after you preprocess it.
+	  </div>
 	</div>
       </div>
       <div class="main_row" id="main_hash_options">
@@ -29,10 +33,10 @@
 
 	  <div class="options_row">
 	    <h3>Choose how to adjust the addresses' case.<span class="tooltip" id="tooltip_case">?</span></h3>
-	    <div class="tooltip_content"
-		 id="tooltip_case_content">Modify the case of the field before it is hashed. Use the same setting as your
-	      partners. You should use either upper or lower unless your source file is already standardized because e-mail
-	      addresses are generally case-insensitive.</div>
+	    <div class="tooltip_content" id="tooltip_case_content">
+	      Modify the case of the field before it is hashed. Use the same setting as your partner. You should use either
+	      upper or lower unless your the field in your source file already has had its case set because e-mail addresses
+	      are generally case-insensitive.</div>
 	    <p><input type="radio" id="email_case_upper" name="email_case" value="upper" checked />
 	      <label for="email_case_upper">Make all addresses UPPER-CASE</label></p>
 	    <p><input type="radio" id="email_case_lower" name="email_case" value="lower"/>
@@ -53,19 +57,33 @@
 	  </div>
 	  
 	  <div class="options_row">
-	    <h3>Choose which field to hash.<span class="tooltip">?</span></h3>
+	    <h3>Choose which field to hash.<span class="tooltip" id="tooltip_email_field">?</span></h3>
+	    <div class="tooltip_content" id="tooltip_email_field_content">
+	      This is the field that will be run through the hashing algorithm. Choose the field that contains the content
+	      you wish to deduplicate with your list swap partner.
+	    </div>
 	    <p>Column containing e-mail<select id="email_field" name="email_field"></select></p>
 	  </div>
 
 
 	  <div class="options_row">
-	    <h3>Select which fields to include in the output file.<span class="tooltip">?</span></h3>
+	    <h3>Select which fields to include in the output file.<span class="tooltip" id="tooltip_output_fields">?</span></h3>
+	    <div class="tooltip_content" id="tooltip_output_fields_content">
+	      Select the fields that you want to show up in your output file. By default, all are selected; if you do not
+	      want a particular file to appear, hold down CTRL and click it in the list to deselect it.
+	    </div>
 	    <p>Include in the output:<select id="output_fields" name="output_fields" multiple></select></p>
 	  </div>
 
 
 	  <div class="options_row">
-	    <h3>Choose text to add before or after the address.<span class="tooltip">?</span></h3>
+	    <h3>Choose text to add before or after the address.<span class="tooltip" id="tooltip_prepostpend">?</span></h3>
+	    <div class="tooltip_content" id="tooltip_prepostpend_content">
+	      <p>Any text entered into these fields will be added before and after the contents of the field you selected
+	      above, and are not affected by the case option you selected.</p>
+	      <p>For example, if you put <em>123</em> before each address and <em>abc</em> after each address, <em>jsmith@example.com</em> will
+	      become <em>123jsmith@example.comabc</em>.</p>
+	    </div>
 	    <p><label for="prepend_text">Add before each address:</label>
 		<input type="text" id="prepend_text" name="prepend_text" size="10"/></p>
 	    <p><label for="postpend_text">Add after each address:</label>
@@ -73,7 +91,10 @@
 	  </div>
 	  
 	  <div class="options_row">
-	    <h3>Choose a hashing algorithm.<span class="tooltip">?</span></h3>
+	    <h3>Choose a hashing algorithm.<span class="tooltip" id="tooltip_hash_method">?</span></h3>
+	    <div class="tooltip_content" id="tooltip_hash_method_content">
+	      Select the algorithm to use when hashing your addresses. Either works fine, but be sure to use the same algorithm as your partner.
+	    </div>
 	    <p><input type="radio" id="hash_method_md5" name="hash_method" value="MD5" checked />
 	      <label for="hash_method_md5">MD5</label></p>
 	    <p><input type="radio" id="hash_method_sha1" name="hash_method" value="SHA1"/>
@@ -81,7 +102,11 @@
 	  </div>  
 	  
 	  <div class="options_row">
-	    <h3>Process your file!<span class="tooltip">?</span></h3>
+	    <h3>Process your file!<span class="tooltip" id="tooltip_process">?</span></h3>
+	    <div class="tooltip_content" id="tooltip_process_content">
+	      Click here to start processing your file. Options for previewing and saving your output will become available
+	      when processing is complete.
+	    </div>
 	    <button id="hash_process_file" name="hash_process_file" onClick='selectOption("hash_process_file");'>Hash my file!</button>
 	  </div>
 	</div>
@@ -91,7 +116,11 @@
 	<div id="output_hider" class="hider"></div>
 	<div class="left">3. Preview your output and save.</div>
 	<div class="right">
-	  <div id="main_hash_preview_output">How many output rows to preview?<input type="text" id="preview_num" name="preview_num" value="10" size="2" /><button id="hash_preview" name="hash_preview" onClick=previewResults();>Preview</button>
+	  <div id="main_hash_preview_output">How many output rows to preview?<input type="text" id="preview_num" name="preview_num" value="10" size="2" /><button id="hash_preview" name="hash_preview" onClick=previewResults();>Preview</button> <span class="tooltip" id="tooltip_previewsave">?</span>
+	  </div>
+	  <div class="tooltip_content" id="tooltip_previewsave_content">
+	    You can preview the output to make sure it looks the way you want and make sure that the results for the first few
+	    rows are what you expect. When you're ready, save the completed file to your computer.
 	  </div>
 	  <button id="save_output" onClick=hashSaveOutput();>Save your output file</button>
 	</div>
