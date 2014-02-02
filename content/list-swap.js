@@ -101,6 +101,10 @@ function decodeCSV(fileBlob, success, failure)
     storageArray = [];
     for (var currLine=0; currLine < lines.length; currLine++)
     {
+	if(lines[currLine] == "" && currLine == lines.length-1) { //Last  line of the file is terminated with \n; don't hash that
+	    continue;
+	}
+
 	if(lines[currLine].indexOf('"') == -1) { //no quotes, so no escaping necessary.
 	    storageArray.push(lines[currLine].split(','));
 	    continue;
