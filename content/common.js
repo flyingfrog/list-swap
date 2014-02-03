@@ -5,6 +5,17 @@ Copyright (c) 2013 by Nathan Gerratt, ngerratt@gmail.com
 var storageArray = [];
 var options = {};
 
+function sniffFeatures () {
+    if(document.getElementsByClassName &&
+       FileReader() && 
+       Blob()) {
+	return true;
+    }
+    else {
+	return false;
+    }
+}
+
 function selectOption(option)
 {
     switch(option)
