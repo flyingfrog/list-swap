@@ -15,11 +15,11 @@ div {
 }
 
 h1 {
-    font-size: 200%;
+    font-size: 150%;
 }
 
 h2 {
-    font-size: 150%;
+    font-size: 100%;
 }
 
 h3 {
@@ -66,6 +66,10 @@ p {
 
 .main_button:hover {
     background-color:#559955;
+}
+
+.warning, .warning:hover { 
+    background-color: #FF8221;
 }
 
 .main_row {
