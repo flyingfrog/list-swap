@@ -7,8 +7,8 @@ var options = {};
 
 function sniffFeatures () {
     if(document.getElementsByClassName &&
-       FileReader() && 
-       Blob()) {
+       new FileReader() && 
+       new Blob()) {
 	return true;
     }
     else {
