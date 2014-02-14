@@ -179,7 +179,7 @@ function decodeCSV(fileBlob, success, failure)
 	    }
 	}
 	storageArray.push(arrayBuild);
-	if(arrayBuild.length >= options[hashField])
+	if(arrayBuild.length >= options["hashField"])
 	    {
 		options["hashField"] = arrayBuild.length;
 	    }
