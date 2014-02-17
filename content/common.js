@@ -10,7 +10,8 @@ var options = {};
 function sniffFeatures () {
     if(document.getElementsByClassName &&
        new FileReader() && 
-       new Blob()) {
+       new Blob() &&
+       saveAs) {
 	return true;
     }
     else {
