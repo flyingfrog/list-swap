@@ -1,6 +1,6 @@
 
 window.onload = function() {
-    if(sniffFeatures) {
+    if(sniffFeatures && sniffFiles && sniffFiles()) {
 	document.getElementById("file_warning").style.display="none";
     }
 

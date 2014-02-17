@@ -7,11 +7,19 @@ var options = {};
 
 /*Controller*/
 
+function sniffFiles() { 
+    if( saveAs ) {
+	return true;
+    }
+    else {
+	return false;
+    }
+}
+
 function sniffFeatures () {
     if(document.getElementsByClassName &&
        new FileReader() && 
-       new Blob() &&
-       saveAs) {
+       new Blob()) {
 	return true;
     }
     else {
