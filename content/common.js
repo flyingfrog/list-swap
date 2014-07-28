@@ -273,7 +273,7 @@ function hashSaveOutput() {
 	    {
 		var currItem = this[i][ options["fieldsToOutput"][j] ];
 		if(currItem == undefined)  {
-		    alert(this[i]);
+		    currItem="";
 		}
 		
 		if(j > 0) {
