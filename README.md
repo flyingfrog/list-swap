@@ -10,10 +10,11 @@ Download Notes
 --------------
 
 This project uses submodules, which Github does not automatically
-download. Until this is fixed, make sure to either `git submodule
-update --init` after cloning, or download the [FileSaver.js][1]
-project and place it into the content/FileSaver directory if you
-downloaded the ZIP file.
+download. Please download from the [Releases][3] tab to get a 
+fully-functional version. If you'd like to clone this project,
+make sure to either `git submodule update --init` after cloning,
+or download the [FileSaver.js][1] project and place it into the
+content/FileSaver directory if you downloaded the ZIP file.
 
 Background
 ----------
@@ -98,3 +99,4 @@ The following are intended enhancements for this program:
 
 [1]: https://github.com/eligrey/FileSaver.js
 [2]: http://www.mrss.com/lab/how-cross-promotions-can-help-your-organization/
+[3]: https://github.com/flyingfrog/list-swap/releases
